@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHAUDHARY's Chatbot</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const chatWindow = document.getElementById('chat-window');
+      const chatForm = document.getElementById('chat-form');
+      const userInput = document.getElementById('user-input');
+
+      // Function to add messages to the chat window
+      function addMessage(message, isUser = false) {
+        const msgRow = document.createElement('div');
+        msgRow.className = 'msg-row ' + (isUser ? 'msg-user' : 'msg-bot');
+        
+        const msgBubble = document.createElement('div');
+        msgBubble.className = 'msg-bubble';
+
+        // If it's a bot message, process potential formatting
+        if (!isUser) {
+          // Convert markdown-style formatting
+          message = message
+            // Headers
+            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+            // Bold
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            // Lists
+            .replace(/^\- (.*$)/gm, '<ul><li>$1</li></ul>')
+            .replace(/^\d\. (.*$)/gm, '<ol><li>$1</li></ol>')
+            // Code
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            // Links
+            .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+            // Paragraphs
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/^(?!<[hou])/gm, '<p>')
+            .replace(/(?<!>)\n/g, '</p>');
+          
+          msgBubble.innerHTML = message;
+        } else {
+          msgBubble.textContent = message;
+        }
+        
+        msgRow.appendChild(msgBubble);
+        chatWindow.appendChild(msgRow);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      // Handle form submission
+      chatForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        // Show user message
+        addMessage(message, true);
+        userInput.value = '';
+
+        try {
+          // Send to server
+          const response = await fetch('http://localhost:3000/gemini', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt: message })
+          });
+
+          const data = await response.json();
+          // Show bot response
+          addMessage(data.text, false);
+        } catch (error) {
+          console.error('Error:', error);
+          addMessage('Sorry, I encountered an error. Please try again.', false);
+        }
+      });
+
+      // Add welcome message when page loads
+      addMessage('Hello! How can I help you today?', false);
+    });
+  </script>
+</head>
+<body>
+  <div class="chatbot-container">
+    <div class="chatbot-header">
+      <span class="header-icon">🤖</span>
+      <h1>Chatbot Chaudhary</h1>
+      <span class="online-dot" title="Online"></span>
+    </div>
+    <div id="chat-window" class="chat-window">
+      <!-- Messages will appear here -->
+    </div>
+    <form id="chat-form" class="chat-form">
+      <input id="user-input" type="text" class="chat-input" placeholder="Type your message..." required autocomplete="off" />
+      <button type="submit" class="chat-send">Send</button>
+    </form>
+  </div>
+  <script src="chatbot.js"></script>
+</body>
+</html>
+   
+

@@ -1,0 +1,354 @@
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #e9d5ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', 'Inter', 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.chatbot-container {
+    width: 100%;
+    max-width: 440px;
+    background: #fff;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    display: flex;
+    flex-direction: column;
+    height: 670px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.chatbot-header {
+    background: linear-gradient(90deg, #2563eb 0%, #a21caf 100%);
+    color: #fff;
+    padding: 1.3rem 1.7rem 1.1rem 1.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.chatbot-header h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0;
+    color: #fff;
+}
+
+.header-icon {
+    font-size: 1.5rem;
+    color: #fff;
+    opacity: 0.85;
+}
+
+.online-dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    background: #4ade80;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #4ade80;
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 #4ade80; }
+    70% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
+    100% { box-shadow: 0 0 0 0 #4ade80; }
+}
+
+.chat-window {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.3rem 1.1rem;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.msg-row {
+    display: flex;
+    margin: 0.5rem 0;
+}
+
+.msg-user {
+    justify-content: flex-end;
+}
+
+.msg-bot {
+    justify-content: flex-start;
+}
+
+.msg-bubble {
+    max-width: 85%;
+    padding: 1.4rem 1.6rem;
+    border-radius: 1.2rem;
+    font-size: 1.1rem;
+    word-break: break-word;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+}
+
+.msg-user .msg-bubble {
+    background: #2563eb;
+    color: #fff;
+    border-bottom-right-radius: 0.3rem;
+    font-weight: 500;
+    font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+}
+
+.msg-bot .msg-bubble {
+    background: #ffffff;
+    color: #1a202c;
+    border-bottom-left-radius: 0.3rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Google Sans', 'Segoe UI', 'Inter', system-ui, sans-serif;
+    letter-spacing: 0.2px;
+}
+
+/* Enhanced typography for bot responses */
+.msg-bot .msg-bubble h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #1e40af;
+    margin: 0 0 1.2rem 0;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid rgba(30, 64, 175, 0.15);
+    display: flex;
+    align-items: center;
+    font-family: 'SF Pro Display', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.msg-bot .msg-bubble {
+    counter-reset: h2counter h3counter;
+}
+
+.msg-bot .msg-bubble h1 {
+    counter-increment: h1counter;
+}
+
+.msg-bot .msg-bubble h1::before {
+    content: counter(h1counter) ".";
+    color: #1a73e8;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.msg-bot .msg-bubble h2 {
+    counter-increment: h2counter;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 1.4rem 0 0.9rem 0;
+    display: flex;
+    align-items: center;
+    font-family: 'SF Pro Display', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.msg-bot .msg-bubble h2::before {
+    content: counter(h1counter) "." counter(h2counter) " •";
+    color: #3b82f6;
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.msg-bot .msg-bubble h3 {
+    counter-increment: h3counter;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #334155;
+    margin: 1.2rem 0 0.7rem 0;
+    display: flex;
+    align-items: center;
+    font-family: 'SF Pro Text', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.msg-bot .msg-bubble h3::before {
+    content: counter(h1counter) "." counter(h2counter) "." counter(h3counter) " •";
+    color: #1a73e8;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.msg-bot .msg-bubble p {
+    margin: 1rem 0;
+    line-height: 1.75;
+    color: #475569;
+    font-size: 1.05rem;
+    font-family: 'SF Pro Text', 'Google Sans Text', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: 0.01em;
+    text-align: justify;
+    hyphens: auto;
+}
+
+.msg-bot .msg-bubble strong {
+    color: #0f172a;
+    font-weight: 600;
+    background: #dbeafe;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: 'SF Pro Text', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    display: inline-block;
+    margin: 0 0.1rem;
+}
+
+.msg-bot .msg-bubble em {
+    color: #202124;
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-color: #1a73e8;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+    padding: 0.1rem 0.2rem;
+}
+
+.msg-bot .msg-bubble ul, 
+.msg-bot .msg-bubble ol {
+    margin: 1.2rem 0;
+    padding: 1rem 1rem 1rem 2.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.msg-bot .msg-bubble li {
+    margin: 0.8rem 0;
+    line-height: 1.6;
+    color: #3c4043;
+    padding-left: 0.5rem;
+    position: relative;
+}
+
+.msg-bot .msg-bubble ul li::marker {
+    content: '•';
+    color: #1a73e8;
+    font-size: 1.5em;
+    font-weight: 900;
+}
+
+.msg-bot .msg-bubble ol li::marker {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.msg-bot .msg-bubble code {
+    background: #f1f3f4;
+    color: #202124;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-family: 'Google Sans Mono', 'Consolas', 'Monaco', monospace;
+    font-size: 0.92em;
+    border: 1px solid #e8eaed;
+    display: inline-block;
+    margin: 0 0.2rem;
+    white-space: nowrap;
+}
+
+.msg-bot .msg-bubble pre {
+    background: #f8f9fa;
+    color: #202124;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    border: 2px solid #e2e8f0;
+    font-family: 'Google Sans Mono', 'Consolas', 'Monaco', monospace;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.msg-bot .msg-bubble pre::before {
+    content: 'Example';
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    background: #fff;
+    padding: 0 8px;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 4px;
+    font-family: 'SF Pro Text', sans-serif;
+}
+
+.msg-bot .msg-bubble a {
+    color: #1a73e8;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 1px;
+    transition: all 0.2s ease;
+}
+
+.msg-bot .msg-bubble a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #1a73e8;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+}
+
+.msg-bot .msg-bubble a:hover::after {
+    transform: scaleX(1);
+}
+
+.msg-bot .msg-bubble a:hover {
+    color: #2c5282;
+    border-bottom-color: #2c5282;
+}
+
+.chat-form {
+    display: flex;
+    gap: 0.7rem;
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.7rem;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.chat-input:focus {
+    border: 1.5px solid #2563eb;
+}
+
+.chat-send {
+    background: linear-gradient(90deg, #2563eb 0%, #a21caf 100%);
+    color: #fff;
+    border: none;
+    border-radius: 0.7rem;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.07);
+    transition: background 0.2s;
+}
+
+.chat-send:hover {
+    background: linear-gradient(90deg, #1d4ed8 0%, #7e22ce 100%);
+}
