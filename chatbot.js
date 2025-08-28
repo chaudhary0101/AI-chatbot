@@ -35,7 +35,6 @@ app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
 
-const cors = require('cors');
 const allowedOrigins = ['https://your-chatbot.netlify.app'];
 app.use(cors({
   origin: function(origin, callback){
@@ -47,6 +46,7 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+
 
 
 
