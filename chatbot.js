@@ -1,51 +1,40 @@
-const { GoogleGenAI } = require("@google/genai");
 const express = require("express");
-const path = require("path");
 const cors = require("cors");
+const path = require("path");
+
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-
-//serve html from express
 app.use(express.static(__dirname));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-const ai = new GoogleGenAI({apiKey: "AIzaSyB8mFOvpEJg_lmsSsIztTJf7XSjx_4gyIQ"});
-
-app.post("/gemini", async (req, res) => {
-  const prompt = req.body.prompt;
-  const response = await main(prompt);
-  res.json({ text: response });
-});
+const ai = new GoogleGenerativeAI("AIzaSyB8mFOvpEJg_lmsSsIztTJf7XSjx_4gyIQ");
 
 async function main(prompt) {
-  const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents:prompt,
-  });
-
-  return response.text;
+  const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
+  const result = await model.generateContent(prompt);
+  return result.response.text();
 }
+
+app.post("/gemini", async (req, res) => {
+  try {
+    const prompt = req.body.prompt;
+    const response = await main(prompt);
+    res.json({ text: response });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
-
-const allowedOrigins = ['https://your-chatbot.netlify.app'];
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
 
 
 
